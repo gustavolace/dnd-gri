@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Grade sobre Imagem de Fundo com Imagens Móveis</title>
+<style>
+    body {
+        margin: 0;
+        padding: 0;
+        /*/background-image: url('https://pics.craiyon.com/2023-06-09/d6a38ec7510a4c2fafdbd7d04400be80.webp'); /* Substitua 'sua-imagem-de-fundo.jpg' pelo caminho da sua imagem */
+        background-color: grey;
+        background-size: cover;
+        background-repeat: no-repeat;
+        position: relative;
+    }
+
+    body::before {
+        content: '';
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        z-index: -1;
+        background-image: linear-gradient(black 1px, transparent 1px), linear-gradient(90deg, black 1px, transparent 1px);
+        background-size: 60px 60px;
+    }
+
+    .draggable {
+        width: 80px;
+        height: 80px;
+        position: absolute;
+        cursor: pointer;
+    }
+</style>
+</head>
+<body>
+    <img src="https://i.pinimg.com/originals/9c/7b/09/9c7b09df7ba44eaaedbc57f4a4aaa285.png" class="draggable" id="img1">
+    <img src="https://i.pinimg.com/originals/9c/7b/09/9c7b09df7ba44eaaedbc57f4a4aaa285.png" class="draggable" id="img1">
+
+    <!-- Adicione mais imagens conforme necessário -->
+    
+    <script>
+        // Função para tornar as imagens móveis e rotacionáveis
+        function makeDraggable(element) {
+            let pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
+            let rotation = 0;
+            let currentDraggedElement = null;
+            element.onmousedown = dragMouseDown;
+
+            function dragMouseDown(e) {
+                e = e || window.event;
+                e.preventDefault();
+                pos3 = e.clientX;
+                pos4 = e.clientY;
+                currentDraggedElement = element;
+                document.onmouseup = closeDragElement;
+                document.onmousemove = elementDrag;
+            }
+
+            function elementDrag(e) {
+                e = e || window.event;
+                e.preventDefault();
+                pos1 = pos3 - e.clientX;
+                pos2 = pos4 - e.clientY;
+                pos3 = e.clientX;
+                pos4 = e.clientY;
+                element.style.top = (element.offsetTop - pos2) + "px";
+                element.style.left = (element.offsetLeft - pos1) + "px";
+            }
+
+            function closeDragElement() {
+                currentDraggedElement = null;
+                document.onmouseup = null;
+                document.onmousemove = null;
+            }
+
+            // Função para rotacionar a imagem quando a seta para cima ou para baixo é pressionada
+            document.addEventListener('keydown', function(event) {
+                if (currentDraggedElement) {
+                    if (event.key === "ArrowUp") {
+                        rotation += 45;
+                        currentDraggedElement.style.transform = `rotate(${rotation}deg)`;
+                    } else if (event.key === "ArrowDown") {
+                        rotation -= 45;
+                        currentDraggedElement.style.transform = `rotate(${rotation}deg)`;
+                    }
+                }
+            });
+        }
+    
+
+        // Tornar as imagens com a classe .draggable móveis e rotacionáveis
+        const draggableElements = document.querySelectorAll('.draggable');
+        draggableElements.forEach(element => {
+            makeDraggable(element);
+        });
+    </script>
+</body>
+</html>
